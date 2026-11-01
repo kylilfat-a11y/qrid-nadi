@@ -31,8 +31,15 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         {/* User Greeting & Notification */}
         <div className="flex items-center justify-between pt-1">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#108981] to-[#14b8a6] text-white flex items-center justify-center font-bold text-base shadow-md shadow-[#108981]/20 border-2 border-white">
-              🏪
+            <div className="w-11 h-11 rounded-2xl overflow-hidden shadow-md shadow-[#108981]/20 border-2 border-white shrink-0 bg-[#D1FAE5] flex items-center justify-center">
+              <img
+                src="/budi_avatar.jpg"
+                alt="Foto Profil Budi"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = '/public/budi_avatar.jpg';
+                }}
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5">

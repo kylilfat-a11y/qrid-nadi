@@ -30,12 +30,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Soft background glow circles */}
         <div className="absolute w-72 h-72 rounded-full bg-[#D1FAE5]/60 blur-2xl -z-1" />
         
-        <div className="relative w-full max-w-[320px] aspect-square rounded-3xl overflow-hidden shadow-xl border-4 border-white/80">
+        <div className="relative w-full max-w-[320px] aspect-square rounded-3xl overflow-hidden shadow-xl border-4 border-white/80 bg-[#D1FAE5]/40 flex items-center justify-center">
           <img
-            src="/src/assets/images/qris_merchant_banner_1793528273691.jpg"
+            src="/qris_merchant_banner.jpg"
             alt="Pedagang UMKM QRIS NADI"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center"
+            onError={(e) => {
+              // Fallback if public path isn't reached yet
+              e.currentTarget.src = '/public/qris_merchant_banner.jpg';
+            }}
           />
           {/* Subtle gradient overlay at bottom */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />

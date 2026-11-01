@@ -54,8 +54,15 @@ export const AccountScreen: React.FC<AccountScreenProps> = ({
           {/* Profile Card */}
           <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-2xl bg-[#108981] text-white flex items-center justify-center font-extrabold text-2xl shadow-md shadow-[#108981]/25">
-                🏪
+              <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-md shadow-[#108981]/25 border-2 border-white shrink-0 bg-[#D1FAE5]">
+                <img
+                  src="/budi_avatar.jpg"
+                  alt="Foto Profil Budi"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/public/budi_avatar.jpg';
+                  }}
+                />
               </div>
               <div>
                 <h3 className="text-base font-extrabold text-[#0F172A]">
