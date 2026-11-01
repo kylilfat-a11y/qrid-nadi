@@ -6,8 +6,7 @@ import {
   StockRecommendation,
   MerchantProfile,
 } from './types';
-import { initialMerchant, transactionsData } from './data/mockData';
-import { PresentationToolbar } from './components/PresentationToolbar';
+import { initialMerchant } from './data/mockData';
 import { BottomNav } from './components/common/BottomNav';
 import { SplashScreen } from './components/screens/SplashScreen';
 import { OnboardingScreen } from './components/screens/OnboardingScreen';
@@ -26,27 +25,23 @@ import { ReportModal } from './components/modals/ReportModal';
 import { RestockModal } from './components/modals/RestockModal';
 import { AiChatDrawer } from './components/modals/AiChatDrawer';
 import { NotificationDrawer } from './components/modals/NotificationDrawer';
-import { BarChart3, TrendingUp, HeartPulse, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
-  // Navigation State
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('dashboard');
-  const [history, setHistory] = useState<ScreenType[]>(['dashboard']);
-
-  // Presentation / Device View state
-  const [isPhoneFrame, setIsPhoneFrame] = useState(true);
+  // Application starts directly on the Splash Screen
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('splash');
+  const [history, setHistory] = useState<ScreenType[]>(['splash']);
 
   // Merchant Profile State
   const [merchant, setMerchant] = useState<MerchantProfile>(initialMerchant);
 
-  // Modals state
+  // Interactive Modals State
   const [selectedReceipt, setSelectedReceipt] = useState<Transaction | null>(null);
   const [selectedReport, setSelectedReport] = useState<ReportItem | null>(null);
   const [selectedRestockItem, setSelectedRestockItem] = useState<StockRecommendation | null>(null);
   const [isAiChatOpen, setIsAiChatOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-  // Navigation handler
+  // Navigation handlers
   const navigateTo = (screen: ScreenType) => {
     setHistory((prev) => [...prev, screen]);
     setCurrentScreen(screen);
@@ -64,7 +59,7 @@ export default function App() {
     }
   };
 
-  // Determine if bottom nav should be rendered
+  // Bottom Navigation is displayed on main in-app screens
   const showBottomNav =
     currentScreen !== 'splash' &&
     currentScreen !== 'onboarding' &&
@@ -72,264 +67,129 @@ export default function App() {
     currentScreen !== 'register';
 
   return (
-    <div className="min-h-screen bg-slate-100/90 text-slate-800 flex flex-col font-sans selection:bg-[#108981]/20 selection:text-[#108981]">
-      {/* Top Presentation Bar with quick jump numbered buttons 1-11 */}
-      <PresentationToolbar
-        currentScreen={currentScreen}
-        onSelectScreen={(screen) => navigateTo(screen)}
-        isPhoneFrame={isPhoneFrame}
-        onToggleFrame={() => setIsPhoneFrame(!isPhoneFrame)}
-      />
+    <div className="min-h-screen bg-slate-900/5 sm:bg-slate-950 flex flex-col items-center justify-center sm:p-4 text-slate-800 font-sans selection:bg-[#108981]/20 selection:text-[#108981]">
+      {/* Mobile Smartphone Frame Container */}
+      <div className="w-full sm:max-w-[412px] h-screen sm:h-[844px] sm:max-h-[96vh] sm:rounded-[48px] sm:shadow-2xl sm:border-[8px] sm:border-slate-900 bg-white overflow-hidden relative flex flex-col">
+        {/* Dynamic Island / Notch on desktop frame */}
+        <div className="hidden sm:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-4.5 bg-black rounded-full z-40 pointer-events-none" />
 
-      {/* Main Canvas */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-        {/* Left Presentation Showcase Column (Visible on Desktop) */}
-        <aside className="hidden lg:flex flex-col justify-between w-[380px] shrink-0 space-y-6">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D1FAE5] text-[#108981] text-xs font-extrabold tracking-wide">
-              <span>OKTOBER 2026</span>
-              <span>•</span>
-              <span>UMKM GO DIGITAL</span>
-            </div>
+        {/* Screen Routing */}
+        <div className="flex-1 w-full bg-white flex flex-col overflow-hidden relative">
+          {currentScreen === 'splash' && (
+            <SplashScreen
+              onContinue={() => navigateTo('onboarding')}
+              onGoToDashboard={() => navigateTo('dashboard')}
+            />
+          )}
 
-            <h1 className="text-3xl font-black text-[#0F172A] tracking-tight leading-tight">
-              Data Hari Ini, Keputusan Lebih Baik untuk Masa Depan Usaha Anda
-            </h1>
+          {currentScreen === 'onboarding' && (
+            <OnboardingScreen
+              onNext={() => navigateTo('login')}
+              onSkip={() => navigateTo('dashboard')}
+            />
+          )}
 
-            <p className="text-xs text-[#64748B] leading-relaxed">
-              Platform kecerdasan bisnis berbasis AI yang mengolah data transaksi
-              QRIS dan informasi operasional UMKM menjadi rekomendasi nyata
-              untuk meningkatkan produktivitas dan daya saing.
-            </p>
+          {currentScreen === 'login' && (
+            <LoginScreen
+              onBack={() => navigateTo('onboarding')}
+              onLoginSuccess={() => navigateTo('dashboard')}
+              onGoToRegister={() => navigateTo('register')}
+            />
+          )}
 
-            {/* 4 Feature Badges matching presentation */}
-            <div className="grid grid-cols-2 gap-2.5 pt-2">
-              <button
-                onClick={() => navigateTo('analisis')}
-                className="p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#108981] hover:bg-[#D1FAE5]/10 text-left transition-all shadow-xs group"
-              >
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#108981] flex items-center justify-center mb-2 group-hover:bg-[#108981] group-hover:text-white transition-colors">
-                  <BarChart3 className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <p className="text-xs font-bold text-[#0F172A] leading-tight">
-                  Analisis Transaksi QRIS
-                </p>
-              </button>
+          {currentScreen === 'register' && (
+            <RegisterScreen
+              onBack={() => navigateTo('login')}
+              onRegisterSuccess={(newMerchant) => {
+                setMerchant((prev) => ({ ...prev, ...newMerchant }));
+                navigateTo('dashboard');
+              }}
+              onGoToLogin={() => navigateTo('login')}
+            />
+          )}
 
-              <button
-                onClick={() => navigateTo('prediksi')}
-                className="p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#108981] hover:bg-[#D1FAE5]/10 text-left transition-all shadow-xs group"
-              >
-                <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-2 group-hover:bg-teal-600 group-hover:text-white transition-colors">
-                  <TrendingUp className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <p className="text-xs font-bold text-[#0F172A] leading-tight">
-                  Prediksi Stok & Penjualan
-                </p>
-              </button>
+          {currentScreen === 'dashboard' && (
+            <DashboardScreen
+              merchant={merchant}
+              onNavigate={(screen) => navigateTo(screen)}
+              onOpenNotifications={() => setIsNotificationOpen(true)}
+            />
+          )}
 
-              <button
-                onClick={() => navigateTo('keuangan')}
-                className="p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#108981] hover:bg-[#D1FAE5]/10 text-left transition-all shadow-xs group"
-              >
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  <HeartPulse className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <p className="text-xs font-bold text-[#0F172A] leading-tight">
-                  Kesehatan Finansial
-                </p>
-              </button>
+          {currentScreen === 'analisis' && (
+            <AnalyticsScreen
+              onBack={goBack}
+              onSelectProduct={(p) => {
+                setSelectedReceipt({
+                  id: 'PROD-' + p.id,
+                  item: p.name,
+                  category: p.category,
+                  date: '16 Okt 2026',
+                  time: '14:00',
+                  paymentMethod: 'QRIS',
+                  amount: p.revenue,
+                  status: 'Sukses',
+                  referenceNo: 'NMID-PROD-' + p.id,
+                });
+              }}
+            />
+          )}
 
-              <button
-                onClick={() => navigateTo('advisor')}
-                className="p-3 rounded-2xl bg-white border border-slate-200/80 hover:border-[#108981] hover:bg-[#D1FAE5]/10 text-left transition-all shadow-xs group"
-              >
-                <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                  <Sparkles className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <p className="text-xs font-bold text-[#0F172A] leading-tight">
-                  Rekomendasi AI Personal
-                </p>
-              </button>
-            </div>
-          </div>
+          {currentScreen === 'prediksi' && (
+            <PredictionScreen
+              onBack={goBack}
+              onOpenRestockModal={(item) => setSelectedRestockItem(item)}
+            />
+          )}
 
-          {/* Color Palette Display matching presentation */}
-          <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-            <span className="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-              Palet Warna Desain
-            </span>
-            <div className="grid grid-cols-5 gap-2 text-center text-[10px]">
-              <div>
-                <div className="w-full h-8 rounded-lg bg-[#108981] shadow-xs" />
-                <span className="font-semibold block mt-1">#108981</span>
-                <span className="text-slate-400 text-[9px]">Hijau Utama</span>
-              </div>
-              <div>
-                <div className="w-full h-8 rounded-lg bg-[#D1FAE5] border border-slate-200" />
-                <span className="font-semibold block mt-1">#D1FAE5</span>
-                <span className="text-slate-400 text-[9px]">Hijau Muda</span>
-              </div>
-              <div>
-                <div className="w-full h-8 rounded-lg bg-[#0F172A]" />
-                <span className="font-semibold block mt-1">#0F172A</span>
-                <span className="text-slate-400 text-[9px]">Navy</span>
-              </div>
-              <div>
-                <div className="w-full h-8 rounded-lg bg-[#64748B]" />
-                <span className="font-semibold block mt-1">#64748B</span>
-                <span className="text-slate-400 text-[9px]">Abu-abu</span>
-              </div>
-              <div>
-                <div className="w-full h-8 rounded-lg bg-[#FFFFFF] border border-slate-200" />
-                <span className="font-semibold block mt-1">#FFFFFF</span>
-                <span className="text-slate-400 text-[9px]">Putih</span>
-              </div>
-            </div>
-          </div>
+          {currentScreen === 'keuangan' && (
+            <FinancialHealthScreen
+              onBack={goBack}
+              onOpenReport={() => navigateTo('laporan')}
+            />
+          )}
 
-          {/* Slogan Badge matching bottom of slide */}
-          <div className="p-3 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl border border-emerald-500/20 text-center">
-            <span className="font-serif italic font-bold text-lg text-[#108981]">
-              UMKM Maju Ekonomi Kuat
-            </span>
-          </div>
-        </aside>
+          {currentScreen === 'advisor' && (
+            <AdvisorScreen
+              merchant={merchant}
+              onBack={goBack}
+              onAskMore={() => setIsAiChatOpen(true)}
+              onNavigateToStock={() => navigateTo('prediksi')}
+            />
+          )}
 
-        {/* Center Mobile Device Frame Container */}
-        <section className="flex flex-col items-center justify-center w-full max-w-[420px]">
-          <div
-            className={`w-full overflow-hidden transition-all duration-300 ${
-              isPhoneFrame
-                ? 'h-[780px] rounded-[48px] shadow-2xl border-[8px] border-slate-900 bg-black ring-1 ring-slate-900/10 relative flex flex-col'
-                : 'h-[780px] rounded-3xl shadow-lg border border-slate-200 bg-white relative flex flex-col'
-            }`}
-          >
-            {/* Screen Content Container */}
-            <div className="flex-1 w-full bg-white flex flex-col overflow-hidden relative">
-              {currentScreen === 'splash' && (
-                <SplashScreen
-                  onContinue={() => navigateTo('onboarding')}
-                  onGoToDashboard={() => navigateTo('dashboard')}
-                />
-              )}
+          {currentScreen === 'riwayat' && (
+            <TransactionsScreen
+              onBack={goBack}
+              onSelectTransaction={(trx) => setSelectedReceipt(trx)}
+            />
+          )}
 
-              {currentScreen === 'onboarding' && (
-                <OnboardingScreen
-                  onNext={() => navigateTo('login')}
-                  onSkip={() => navigateTo('dashboard')}
-                />
-              )}
+          {currentScreen === 'laporan' && (
+            <ReportsScreen
+              onBack={goBack}
+              onOpenReportModal={(rep) => setSelectedReport(rep)}
+            />
+          )}
 
-              {currentScreen === 'login' && (
-                <LoginScreen
-                  onBack={goBack}
-                  onLoginSuccess={() => navigateTo('dashboard')}
-                  onGoToRegister={() => navigateTo('register')}
-                />
-              )}
+          {currentScreen === 'akun' && (
+            <AccountScreen
+              merchant={merchant}
+              onUpdateMerchant={(up) => setMerchant((prev) => ({ ...prev, ...up }))}
+              onLogout={() => navigateTo('login')}
+              onBack={goBack}
+            />
+          )}
+        </div>
 
-              {currentScreen === 'register' && (
-                <RegisterScreen
-                  onBack={goBack}
-                  onRegisterSuccess={(newMerchant) => {
-                    setMerchant((prev) => ({ ...prev, ...newMerchant }));
-                    navigateTo('dashboard');
-                  }}
-                  onGoToLogin={() => navigateTo('login')}
-                />
-              )}
-
-              {currentScreen === 'dashboard' && (
-                <DashboardScreen
-                  merchant={merchant}
-                  onNavigate={(screen) => navigateTo(screen)}
-                  onOpenNotifications={() => setIsNotificationOpen(true)}
-                />
-              )}
-
-              {currentScreen === 'analisis' && (
-                <AnalyticsScreen
-                  onBack={goBack}
-                  onSelectProduct={(p) => {
-                    // Quick modal or info
-                    setSelectedReceipt({
-                      id: 'PROD-' + p.id,
-                      item: p.name,
-                      category: p.category,
-                      date: '16 Okt 2026',
-                      time: '14:00',
-                      paymentMethod: 'QRIS',
-                      amount: p.revenue,
-                      status: 'Sukses',
-                      referenceNo: 'NMID-PROD-' + p.id,
-                    });
-                  }}
-                />
-              )}
-
-              {currentScreen === 'prediksi' && (
-                <PredictionScreen
-                  onBack={goBack}
-                  onOpenRestockModal={(item) => setSelectedRestockItem(item)}
-                />
-              )}
-
-              {currentScreen === 'keuangan' && (
-                <FinancialHealthScreen
-                  onBack={goBack}
-                  onOpenReport={() => navigateTo('laporan')}
-                />
-              )}
-
-              {currentScreen === 'advisor' && (
-                <AdvisorScreen
-                  merchant={merchant}
-                  onBack={goBack}
-                  onAskMore={() => setIsAiChatOpen(true)}
-                  onNavigateToStock={() => navigateTo('prediksi')}
-                />
-              )}
-
-              {currentScreen === 'riwayat' && (
-                <TransactionsScreen
-                  onBack={goBack}
-                  onSelectTransaction={(trx) => setSelectedReceipt(trx)}
-                />
-              )}
-
-              {currentScreen === 'laporan' && (
-                <ReportsScreen
-                  onBack={goBack}
-                  onOpenReportModal={(rep) => setSelectedReport(rep)}
-                />
-              )}
-
-              {currentScreen === 'akun' && (
-                <AccountScreen
-                  merchant={merchant}
-                  onUpdateMerchant={(up) => setMerchant((prev) => ({ ...prev, ...up }))}
-                  onLogout={() => navigateTo('login')}
-                  onBack={goBack}
-                />
-              )}
-            </div>
-
-            {/* Persistent Mobile Bottom Navigation for main tabs */}
-            {showBottomNav && (
-              <BottomNav
-                currentScreen={currentScreen}
-                onNavigate={(screen) => navigateTo(screen)}
-              />
-            )}
-          </div>
-
-          {/* Instruction helper below phone frame */}
-          <p className="text-center text-xs text-slate-500 mt-3">
-            Gunakan tombol menu atau tombol navigasi di dalam frame untuk berpindah fitur secara langsung.
-          </p>
-        </section>
-      </main>
+        {/* Bottom Navigation for in-app screens */}
+        {showBottomNav && (
+          <BottomNav
+            currentScreen={currentScreen}
+            onNavigate={(screen) => navigateTo(screen)}
+          />
+        )}
+      </div>
 
       {/* Global Interactive Modals */}
       <ReceiptModal
@@ -348,7 +208,7 @@ export default function App() {
         item={selectedRestockItem}
         onClose={() => setSelectedRestockItem(null)}
         onOrderSuccess={(name, qty) => {
-          alert(`Berhasil mengirim pemesanan ${qty} ${name} ke supplier!`);
+          alert(`Pemesanan ${qty} ${name} berhasil dikirim ke supplier.`);
         }}
       />
 
