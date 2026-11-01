@@ -20,8 +20,6 @@ export const StatusBar: React.FC<{ light?: boolean }> = ({ light = false }) => {
       }`}
     >
       <span className="font-semibold text-[13px] tracking-tight">9:41</span>
-      {/* Dynamic island subtle notch */}
-      <div className="w-24 h-4 bg-black/10 rounded-full mx-auto hidden sm:block opacity-20" />
       <div className="flex items-center gap-1.5 opacity-90">
         <Signal className="w-3.5 h-3.5 stroke-[2.5]" />
         <Wifi className="w-3.5 h-3.5 stroke-[2.5]" />

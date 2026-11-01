@@ -67,14 +67,11 @@ export default function App() {
     currentScreen !== 'register';
 
   return (
-    <div className="min-h-screen bg-slate-900/5 sm:bg-slate-950 flex flex-col items-center justify-center sm:p-4 text-slate-800 font-sans selection:bg-[#108981]/20 selection:text-[#108981]">
-      {/* Mobile Smartphone Frame Container */}
-      <div className="w-full sm:max-w-[412px] h-screen sm:h-[844px] sm:max-h-[96vh] sm:rounded-[48px] sm:shadow-2xl sm:border-[8px] sm:border-slate-900 bg-white overflow-hidden relative flex flex-col">
-        {/* Dynamic Island / Notch on desktop frame */}
-        <div className="hidden sm:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-4.5 bg-black rounded-full z-40 pointer-events-none" />
-
+    <div className="w-full min-h-screen bg-white text-slate-800 font-sans flex justify-center selection:bg-[#108981]/20 selection:text-[#108981]">
+      {/* Mobile Smartphone Viewport */}
+      <div className="w-full max-w-md min-h-screen bg-white flex flex-col relative shadow-none">
         {/* Screen Routing */}
-        <div className="flex-1 w-full bg-white flex flex-col overflow-hidden relative">
+        <div className="flex-1 w-full bg-white flex flex-col relative">
           {currentScreen === 'splash' && (
             <SplashScreen
               onContinue={() => navigateTo('onboarding')}

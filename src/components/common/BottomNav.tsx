@@ -67,7 +67,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   return (
     <nav
       aria-label="Navigasi Utama"
-      className="w-full bg-white border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] px-3 py-2 z-30 shrink-0"
+      className="sticky bottom-0 w-full bg-white border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] px-3 py-2 z-30 shrink-0"
     >
       <div className="grid grid-cols-5 items-center max-w-md mx-auto">
         {tabs.map((tab) => {
