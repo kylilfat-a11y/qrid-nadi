@@ -1,0 +1,6 @@
+{
+  "name": "QRIS NADI",
+  "description": "Platform kecerdasan bisnis berbasis AI untuk analisis transaksi QRIS, prediksi stok, kesehatan finansial, dan rekomendasi personal UMKM.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
